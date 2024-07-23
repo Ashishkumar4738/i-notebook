@@ -1,25 +1,25 @@
-import { React, useState } from "react";
+import { React, useState, } from "react";
 import NoteContext from "./NoteContext";
-
 import axios from "axios";
 const url = "http://localhost:5000";
 
 const NoteState = (props) => {
   const initialNote = [];
   const [notes, setNotes] = useState(initialNote);
-  const [mode, setMode] = useState("light");
-
+  const [mode, setMode] = useState("dark");
+  // console.log( "token ",localStorage.getItem("token"))
   
   //fetch notes from server
   const getNotes = async () => {
     const ur = `${url}/api/list/fetchList`;
     const { data } = await axios(ur, {
       headers: {
-        auth_token:
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjUyYWVlNzVlYWI5ZWZjYjEyOGNmNDZkIn0sImlhdCI6MTY5NzkxNzM5N30.sX8Xu7M1klhTh3ljmNsNni3N9dJy0Uyck0K0w498Cs0",
+        auth_token: localStorage.getItem("token"),
+         
       },
     });
-    // console.log(data[0].list);
+    // console.log(data);
+    if(data[0])
     setNotes(data[0].list);
     // console.log(notes);
   };
@@ -48,8 +48,8 @@ const NoteState = (props) => {
         {
           headers: {
             "Content-Type": "multipart/form-data",
-            auth_token:
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjUyYWVlNzVlYWI5ZWZjYjEyOGNmNDZkIn0sImlhdCI6MTY5NzkxNzM5N30.sX8Xu7M1klhTh3ljmNsNni3N9dJy0Uyck0K0w498Cs0",
+            auth_token:localStorage.getItem("token")
+             
           },
         }
       );
@@ -66,8 +66,8 @@ const NoteState = (props) => {
     try {
       const { data } = await axios.delete(ur, {
         headers: {
-          auth_token:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjUyYWVlNzVlYWI5ZWZjYjEyOGNmNDZkIn0sImlhdCI6MTY5NzkxNzM5N30.sX8Xu7M1klhTh3ljmNsNni3N9dJy0Uyck0K0w498Cs0",
+          auth_token:localStorage.getItem("token")
+            
         },
       });
       console.log(data);
@@ -94,8 +94,8 @@ const NoteState = (props) => {
 
         {
           headers: {
-            auth_token:
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjUyYWVlNzVlYWI5ZWZjYjEyOGNmNDZkIn0sImlhdCI6MTY5NzkxNzM5N30.sX8Xu7M1klhTh3ljmNsNni3N9dJy0Uyck0K0w498Cs0",
+            auth_token:localStorage.getItem("token")
+             
           },
         }
       );

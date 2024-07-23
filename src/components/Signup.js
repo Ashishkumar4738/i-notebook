@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const url = "http://localhost:5000";
-function Signup() {
+function Signup(props) {
     let navigate = useNavigate();
     const [crediential, setCrediential] = useState({
         username:"",
@@ -20,23 +20,33 @@ function Signup() {
         const email = crediential.email;
         const password = crediential.password;
         if(crediential.copy_password!==password){
-            alert("Not Match: Please check your password with re-enter password")
+            // alert("Not Match: Please check your password with re-enter password")
+            props.handleAlert("Your passwords are not same","danger");
         }else{
             const ur = `${url}/api/auth/createUser`;
             const sign = await axios.post(ur,{
                 name,email,password
             });
-            console.log(sign);
-            navigate("/")
+
+            if(!sign.data.success){
+
+              navigate("/login");
+              props.handleAlert("This email is already registered.","danger");
+            }else{
+              navigate("/");
+              props.handleAlert("Your account created Successfully.","success");
+            }
         }
 
     }
   return (
     <>
-      <h1>this is signup page</h1>
+    <h2>Create your account...</h2>
       <form onSubmit={onSubmit} >
+        <label htmlFor="username" className="form-label">
+            Username
+          </label>
         <div className="input-group mb-3">
-          
           <input
             type="text"
             onChange={handleChange}
@@ -62,9 +72,7 @@ function Signup() {
             aria-describedby="emailHelp"
             value={crediential.email}
           />
-          <div id="emailHelp" className="form-text">
-            We'll never share your email with anyone else.
-          </div>
+          
         </div>
         <div className="mb-3">
           <label htmlFor="exampleInputPassword1" className="form-label">

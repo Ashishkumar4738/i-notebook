@@ -2,10 +2,13 @@ import React, { useState,useRef, useContext } from "react";
 import NoteContext from "../context/notes/NoteContext";
 
 function Notesitem(props) {
-  // console.log(props.notes[0]);
+
   const context = useContext(NoteContext);
   const { deleteNote, mode, updateNote } = context;
   function handleDelet(id) {
+
+    // console.log(typeof(props.handleAlert))
+    props.handleAlert("Note deleted successfully.","success");
     deleteNote(id);
   }
   const refEdit = useRef(null);
@@ -27,6 +30,7 @@ function Notesitem(props) {
     e.preventDefault();
     // console.log("inside the handleclick in notesitem");
     updateNote(Id, note.title, note.description, note.tag);
+    props.handleAlert("Note updated successfully.","success");
     refClose.current.click();
   }
 
@@ -41,7 +45,7 @@ function Notesitem(props) {
         type="button"
         className="btn btn-primary"
         data-bs-toggle="modal"
-        data-bs-target="#exampleModal"
+        data-bs-target="#editnote"
         ref={refEdit}
         hidden
       >
@@ -51,9 +55,9 @@ function Notesitem(props) {
       {/* <!-- Modal --> */}
       <div
         className="modal fade"
-        id="exampleModal"
+        id="editnote"
         tabIndex="-1"
-        aria-labelledby="exampleModalLabel"
+        aria-labelledby="editnoteLabel"
         aria-hidden="true"
       >
         <div className="modal-dialog"  >
@@ -120,7 +124,7 @@ function Notesitem(props) {
                   type="submit"
                   className="btn btn-primary"  
                 >
-                  Submit
+                  Update
                 </button>
                 </div>
               </form>
@@ -146,6 +150,7 @@ function Notesitem(props) {
         <div className="row mt-5 ">
           {props.notes.length===0?"No notes to display": props.notes.map((item) => {
             const { _id, title, description, tag, imageUrl } = item;
+            console.log("in notesitems",imageUrl)
             return (
               <div
                 key={_id}
@@ -174,8 +179,6 @@ function Notesitem(props) {
                         
                       ></i>
                       <button
-                        data-bs-toggle="modal"
-                        data-bs-target="#exampleModal"
                         style={{ border: "none", width: "0px", height: "0px" }}
                         onClick={() => {
                           setId(_id);

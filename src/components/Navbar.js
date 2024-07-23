@@ -1,11 +1,12 @@
 import React, { useContext } from "react";
 import NoteContext from "../context/notes/NoteContext";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 function Navbar() {
+  const navigate = useNavigate();
   const location = useLocation();
   const context = useContext(NoteContext);
-  const { mode, handleMode } = context;
+  const { mode, handleMode, setNotes } = context;
   if (mode === "light") {
     document.getElementById("root").style.backgroundColor = "#f3f3f3";
     document.getElementById("root").style.color = "black";
@@ -17,10 +18,19 @@ function Navbar() {
     handleMode();
   }
 
+  const logout = ()=>{
+    localStorage.removeItem("token");
+    setNotes([]);
+    navigate("/login")
+  }
+
   return (
     <>
-      <nav className={`navbar navbar-expand-lg  bg-${mode} navbar-${mode} `}>
-        <div className="container-fluid  ">
+      <nav
+        className={`navbar navbar-expand-lg  bg-${mode} navbar-${mode}  `}
+        
+      >
+        <div className="container-fluid "  >
           <Link
             to="/"
             className={`navbar-brand ${
@@ -55,52 +65,8 @@ function Navbar() {
                   Home
                 </Link>
               </li>
-              <li className="nav-item">
-                <Link
-                  className={`nav-link ${
-                    location.pathname === "/notesitem" ? "active" : ""
-                  } `}
-                  to="/notesitem"
-                >
-                  NotesItem
-                </Link>
-              </li>
-              {/* <li className="nav-item dropdown">
-                <Link
-                  className="nav-link dropdown-toggle"
-                  to="/"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  Dropdown
-                </Link>
-                <ul className="dropdown-menu">
-                  <li>
-                    <Link className="dropdown-item" to="/">
-                      Action
-                    </Link>
-                  </li>
-                  <li>
-                    <Link className="dropdown-item" to="/">
-                      Another action
-                    </Link>
-                  </li>
-                  <li>
-                    <hr className="dropdown-divider" />
-                  </li>
-                  <li>
-                    <Link className="dropdown-item" to="/">
-                      Something else here
-                    </Link>
-                  </li>
-                </ul>
-              </li> */}
-              {/* <li className="nav-item">
-                <Link className="nav-link disabled" aria-disabled="true">
-                  Disabled
-                </Link>
-              </li> */}
+              
+            
             </ul>
             <div className="form-check form-switch">
               <input
@@ -110,24 +76,12 @@ function Navbar() {
                 role="switch"
                 id="flexSwitchCheckDisabled"
               />
-              {/* <label className="form-check-label" for="flexSwitchCheckDisabled">Disabled switch checkbox input</label> */}
             </div>
           </div>
-
-          {/* <form className="d-flex" role="search">
-            <input
-              className="form-control me-2"
-              type="search"
-              placeholder="Search"
-              aria-label="Search"
-            />
-            <button className="btn btn-outline-success" type="submit">
-              Search
-            </button>
-          </form> */}
-         <Link to="/login">
+          { !localStorage.getItem("token")?(
+          <form className="d-flex" role="search">
+          <Link to="/login">
             <button type="button" className="btn btn-primary mx-1">
-            
               Login
             </button>
           </Link>
@@ -136,6 +90,10 @@ function Navbar() {
               Signup
             </button>
           </Link>
+          </form>
+          ):( <button onClick={logout} type="button"  className="btn btn-primary mx-1">
+          Logout
+        </button>) }
         </div>
       </nav>
     </>
